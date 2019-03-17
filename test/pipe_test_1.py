@@ -12,21 +12,32 @@ def foo(arg, conn):
     conn.close()
 
 
-parent_conn, child_conn = mp.Pipe()
-p = mp.Process(target=foo, args=("hola", child_conn))
-p.start()
-recv = []
+if __name__ == "__main__":
 
-while True:
+    parent_conn, child_conn = mp.Pipe()
+    p = mp.Process(target=foo, args=("hola", child_conn))
+    p.start()
+    recv = []
 
-    time.sleep(2)
-    while parent_conn.poll():
-        recv.append(parent_conn.recv())
-    while recv:
-        rcv = recv.pop()
-        if rcv == "terminado":
-            exit()
+    data = True
+    parent_conn.send("test")
+    while True:
+
+        if parent_conn.poll():
+            if not data:
+                print("hay datos")
+            data = True
+            while parent_conn.poll():
+                recv.append(parent_conn.recv())
+            for data in recv:
+                print("\tDato: {data}".format(data=data))
         else:
-            print(rcv)
-
-print("termina programa")
+            if data:
+                print("no hay datos")
+            data = False
+        while recv:
+            rcv = recv.pop()
+            if rcv == "terminado":
+                exit()
+            else:
+                print(rcv)
