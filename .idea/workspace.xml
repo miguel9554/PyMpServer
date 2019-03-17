@@ -2,10 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e101ed54-a861-4791-b7f5-45dac7129a89" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/test/loop_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/write_file_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/pipe_test_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/pipe_test_1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/server_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/server_test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,10 +15,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test/server_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="561">
-              <caret line="60" column="4" selection-start-line="60" selection-start-column="4" selection-end-line="60" selection-end-column="4" />
+            <state relative-caret-position="323">
+              <caret line="55" column="71" selection-start-line="55" selection-start-column="71" selection-end-line="55" selection-end-column="71" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
+                <element signature="e#124#400#0" />
+                <element signature="e#1567#1923#0" />
               </folding>
             </state>
           </provider>
@@ -149,7 +147,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.write_file_test">
+  <component name="RunManager" selected="Python.server_test (1)">
     <configuration name="loop_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="PyMpServer" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -257,8 +255,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.write_file_test" />
         <item itemvalue="Python.server_test (1)" />
+        <item itemvalue="Python.write_file_test" />
         <item itemvalue="Python.loop_test" />
         <item itemvalue="Python.pipe_test_1" />
         <item itemvalue="Python.test_pipe" />
@@ -278,6 +276,15 @@
     </task>
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
@@ -287,13 +294,13 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32936078" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3997833" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32936078" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3997833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32936078" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32936078" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32936078" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32936078" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -312,10 +319,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/server_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="60" column="4" selection-start-line="60" selection-start-column="4" selection-end-line="60" selection-end-column="4" />
+        <state relative-caret-position="323">
+          <caret line="55" column="71" selection-start-line="55" selection-start-column="71" selection-end-line="55" selection-end-column="71" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#124#400#0" />
+            <element signature="e#1567#1923#0" />
           </folding>
         </state>
       </provider>

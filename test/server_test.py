@@ -30,12 +30,16 @@ def foo((station, intervals, date), conn):
     #     date=date))
 
     #required_processes = random.randint(50, 70)
-    required_processes = 6
+    args = range(1,9)
 
-    conn.send("REQ {count}".format(count=str(required_processes)))
-    
-    while required_processes:
+    conn.send("REQ {count}".format(count=str(len(args))))
+
+    running_processes = []
+
+    while args or running_processes:
         
+        communicate_with_processes(running_processes, conn)
+
         if not conn.poll():
     
             continue
@@ -43,21 +47,20 @@ def foo((station, intervals, date), conn):
         else:
 
             approved_to_run = conn.recv()
-            required_processes -= approved_to_run
-            # conn.send("Estacion {station}, intervalos {interval_0} y {interval_1} para el dia {date} corriendo {count}".format(
-            #     station=station,
-            #     interval_0=intervals[0],
-            #     interval_1=intervals[1],
-            #     date=date,
-            #     count=approved_to_run))
-            time.sleep(1*approved_to_run)
-            conn.send("DONE {count}".format(count=approved_to_run))
+
+            for i in range(approved_to_run):
+
+                parent_conn, child_conn = mp.Pipe()
+                p = mp.Process(target=bar, args=(args.pop(), child_conn))
+                p.start()
+                running_processes.append(Process(p, parent_conn, 0, 0))
 
     conn.send("END")
 
 
-def job(seconds):
-    time.sleep(seconds)
+def bar(seconds, conn):
+    time.sleep(seconds*3)
+    conn.send("END")
 
 
 def get_requested(running_processes):
@@ -75,7 +78,9 @@ def get_requested(running_processes):
     return len(running_processes) + child_processes, requested_processes
 
 
-def communicate_with_processes(running_processes):
+def communicate_with_processes(running_processes, conn=None):
+
+    current_processes = len(running_processes)
 
     for process in running_processes:
 
@@ -101,6 +106,11 @@ def communicate_with_processes(running_processes):
             else:
 
                 print(recv)
+
+    if conn:
+        finnished_processes = current_processes - len(running_processes)
+        if finnished_processes:
+            conn.send("DONE {count}".format(count=finnished_processes))
 
 
 if __name__ == "__main__":
@@ -146,7 +156,7 @@ if __name__ == "__main__":
                 if arguments:
                     # start MAX_PROCESSES - total_processes processes
 
-                    for count in range(0, MAX_PROCESSES - total_processes):
+                    for _ in range(MAX_PROCESSES - total_processes):
 
                         parent_conn, child_conn = mp.Pipe()
                         p = mp.Process(target=foo, args=(arguments.pop(), child_conn))
