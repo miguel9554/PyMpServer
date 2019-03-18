@@ -1,6 +1,5 @@
 import datetime
 import itertools
-import random
 import multiprocessing as mp
 import time
 import os
@@ -8,54 +7,46 @@ import os
 
 class Process:
     
-    def __init__(self, process, conn, requested, children):
+    def __init__(self, process, control_conn, data_conn, requested, children, id):
         
         self.process = process
-        self.conn = conn
+        self.control_conn = control_conn
+        self.data_conn = data_conn
         self.requested = requested
         self.children = children
-
-    def run_children(self, count):
-        
-        if count:
-            print(count)
+        self.id = id
 
 
-def foo((station, intervals, date), conn):
+def foo((station, intervals, date), control_conn, data_conn):
 
-    # conn.send("Estacion {station}, intervalos {interval_0} y {interval_1} para el dia {date}".format(
-    #     station=station,
-    #     interval_0=intervals[0],
-    #     interval_1=intervals[1],
-    #     date=date))
+    arguments = range(1, 9)
 
-    #required_processes = random.randint(50, 70)
-    args = range(1,9)
-
-    conn.send("REQ {count}".format(count=str(len(args))))
+    control_conn.send("REQ {count}".format(count=str(len(arguments))))
 
     running_processes = []
 
-    while args or running_processes:
+    while arguments or running_processes:
         
-        communicate_with_processes(running_processes, conn)
+        communicate_with_processes(running_processes, control_conn)
 
-        if not conn.poll():
+        if not control_conn.poll():
     
             continue
     
         else:
 
-            approved_to_run = conn.recv()
+            approved_to_run = control_conn.recv()
 
             for i in range(approved_to_run):
 
-                parent_conn, child_conn = mp.Pipe()
-                p = mp.Process(target=bar, args=(args.pop(), child_conn))
+                parent_control_conn, child_control_conn = mp.Pipe()
+                parent_data_conn, child_data_conn = mp.Pipe()
+                argument = arguments.pop()
+                p = mp.Process(target=bar, args=(argument, child_control_conn, child_data_conn))
                 p.start()
-                running_processes.append(Process(p, parent_conn, 0, 0))
+                running_processes.append(Process(p, parent_control_conn, parent_data_conn, 0, 0, argument))
 
-    conn.send("END")
+    control_conn.send("END")
 
 
 def bar(seconds, conn):
@@ -158,10 +149,12 @@ if __name__ == "__main__":
 
                     for _ in range(MAX_PROCESSES - total_processes):
 
-                        parent_conn, child_conn = mp.Pipe()
-                        p = mp.Process(target=foo, args=(arguments.pop(), child_conn))
+                        parent_control_conn, child_control_conn = mp.Pipe()
+                        parent_data_conn, child_data_conn = mp.Pipe()
+                        argument = arguments.pop()
+                        p = mp.Process(target=foo, args=(argument, child_control_conn, child_data_conn))
                         p.start()
-                        running_processes.append(Process(p, parent_conn, 0, 0))
+                        running_processes.append(Process(p, parent_control_conn, parent_data_conn, 0, 0, argument))
 
                         if not arguments:
 
@@ -170,7 +163,7 @@ if __name__ == "__main__":
             else:
 
                 for process in running_processes:
-                    process.conn.close()
+                    process.control_conn.close()
                     if process.process.is_alive():
                         process.process.terminate()
                     running_processes.remove(process)
@@ -185,14 +178,14 @@ if __name__ == "__main__":
                     children_processes_to_run = min(process.requested, MAX_PROCESSES - total_processes)
 
                     if children_processes_to_run:
-                        process.conn.send(children_processes_to_run)
+                        process.control_conn.send(children_processes_to_run)
                         total_processes += children_processes_to_run
                         process.requested -= children_processes_to_run
                         process.children += children_processes_to_run
             else:
 
                 for process in running_processes:
-                    process.conn.close()
+                    process.control_conn.close()
                     if process.process.is_alive():
                         process.process.terminate()
                     running_processes.remove(process)
@@ -201,7 +194,7 @@ if __name__ == "__main__":
         else:
 
             for process in running_processes:
-                process.conn.close()
+                process.control_conn.close()
                 if process.process.is_alive():
                     process.process.terminate()
                 running_processes.remove(process)
